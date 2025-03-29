@@ -8,11 +8,12 @@ def udp_client_pinger(server_address, port, num_pings):
     clientSocket = socket(AF_INET, SOCK_DGRAM)
 
     try:
-        clientSocket.settimeout(1.0)
+        clientSocket.settimeout(1.0) #1 second
 
         RTTList = []
         sentPackets = 0
-        receivedPackets = 0
+        receivedPackets = 0                 
+
         
         for i in range(num_pings):
             timeCurr = datetime.now().strftime('%a %b %d %H:%M:%S %Y')      #ping message sent here
@@ -22,9 +23,6 @@ def udp_client_pinger(server_address, port, num_pings):
             try:
                 clientSocket.sendto(message.encode(), (server_address, port)) #this sends a message to server
                 sentPackets += 1
-
-                time.sleep(random.uniform(0.010, 0.020)) #simulate a random delay from 0-20 ms
-
                 response, server = clientSocket.recvfrom(1024)                #message received
                 timeEnd = time.time()
                 
@@ -32,11 +30,10 @@ def udp_client_pinger(server_address, port, num_pings):
                 RTTList.append(rtt)
                 receivedPackets += 1
                 
-                print(f"Received from server: {response.decode()}")            #server response message
+                print(f"Kris {i+1}: server reply: {response.decode()}")            #server response message
                 print(f"RTT: {rtt:.2f} ms")
-            
             except timeout:
-                print("Request timed out") 
+                print(f"Kris {i+1}: server request timed out, message was lost")
         
         if RTTList:                        #summary report here 
             min_rtt = min(RTTList)
@@ -52,7 +49,10 @@ def udp_client_pinger(server_address, port, num_pings):
         print(f"Maximum RTT: {max_rtt:.2f} ms")
         print(f"Average RTT: {avg_rtt:.2f} ms")
         print(f"Packet Loss: {packetLoss:.2f}%")
-    
+
+    except:
+        print("Something went wrong")
+
     finally:
         clientSocket.close()
 
