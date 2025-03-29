@@ -1,3 +1,4 @@
+#Our UDP Pinger (NOT A SERVER)
 from datetime import datetime
 from socket import *
 import time
@@ -41,7 +42,7 @@ def udp_client_pinger(server_address, port, num_pings):
             avg_rtt = sum(RTTList) / len(RTTList) 
             packetLoss = ((sentPackets - receivedPackets) / sentPackets) * 100
         else:
-            min_rtt = max_rtt = avg_rtt = 0
+            min_rtt = max_rtt = avg_rtt = 0 #default to 100# packet loss if no RTTs
             packetLoss = 100
         
         print("\nKris' Summary Report:")
@@ -57,3 +58,4 @@ def udp_client_pinger(server_address, port, num_pings):
         clientSocket.close()
 
 udp_client_pinger('localhost', 12000, 10)
+#udp_client_pinger('localhost', 12000, 50)  #50 pings for part C if wanted
